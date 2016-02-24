@@ -27,6 +27,7 @@ public class Client {
 		String buffer = null;
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuffer stringBuffer = null;
 
 		/* Parse parameter and do args checking */
 		if (args.length < 2) {
@@ -58,7 +59,13 @@ public class Client {
 			try {
 				/* Read data from the user */
 				System.out.println("\nEnter data to send to server");
-				buffer = br.readLine();
+				/* Using a string buffer to read-in the request and headers */
+				stringBuffer = new StringBuffer();
+				/* Read until we receive a second \r\n" */
+				while((buffer=br.readLine()).length()!=0) {
+					stringBuffer.append(buffer);
+					stringBuffer.append("\\r\\n");
+				}
 				/*
 				 * connect() to the server at addr:port. The server needs to be
 				 * listen() in order for this to succeed. This call initiates
@@ -75,12 +82,12 @@ public class Client {
 						sock.getInputStream()));
 				/* Write the date to the server */
 				outStream = new DataOutputStream(sock.getOutputStream());
-				outStream.writeChars(buffer.toString());
+				outStream.writeChars(stringBuffer.toString());
 				outStream.writeChar('\n');
 				outStream.flush();
 				/* Read the data echoed by the server */
 				buffer = inStream.readLine();
-				System.out.println("Received : " + buffer.toString());
+				System.out.println("Received : " + buffer.toString()+ stringBuffer.toString());
 				/* Close the connection and wait for next input */
 				sock.close();
 			} catch (IOException e) {

@@ -24,7 +24,6 @@ public class Server {
 		int port = 8080;
 		BufferedReader inStream = null;
 		DataOutputStream outStream = null;
-
 		/* Parse parameter and do args checking */
 		if (args.length < 1) {
 			System.err.println("Usage: java Server <port_number>");
@@ -75,8 +74,16 @@ public class Server {
 				inStream = new BufferedReader(new InputStreamReader(
 						clientSock.getInputStream()));
 				outStream = new DataOutputStream(clientSock.getOutputStream());
-				/* Read the data send by the client */
+				/* Read until end of stream */
+				String input;
 				buffer = inStream.readLine();
+//				while((input=inStream.readLine())!=null) {
+//					stringBuffer.append(input);
+//					stringBuffer.append("\r\n");
+//					System.out.println("infinte loop");
+//				}
+				/* Parse the request */
+				
 				System.out.println("Read from client "
 						+ clientSock.getInetAddress() + ":"
 						+ clientSock.getPort() + " " + buffer);
