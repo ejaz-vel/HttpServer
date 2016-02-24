@@ -44,6 +44,10 @@ public class HTTPRequestDetails {
 		return HTTPHeaders;
 	}
 	
+	public void addHTTPHeader(String key, String value) {
+		this.HTTPHeaders.put(key, value);
+	}
+	
 	public void setHTTPHeaders(Map<String, String> hTTPHeaders) {
 		HTTPHeaders = hTTPHeaders;
 	}
