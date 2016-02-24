@@ -16,6 +16,8 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import cmu.webserver.handler.HTTPHandler;
+
 public class Server {
 	private static ServerSocket srvSock;
 
@@ -67,36 +69,9 @@ public class Server {
 				System.out.println("Accpeted new connection from "
 						+ clientSock.getInetAddress() + ":"
 						+ clientSock.getPort());
+				Thread thread = new Thread(new HTTPHandler(clientSock));
+				thread.start();
 			} catch (IOException e) {
-				continue;
-			}
-			try {
-				inStream = new BufferedReader(new InputStreamReader(
-						clientSock.getInputStream()));
-				outStream = new DataOutputStream(clientSock.getOutputStream());
-				/* Read until end of stream */
-				String input;
-				buffer = inStream.readLine();
-//				while((input=inStream.readLine())!=null) {
-//					stringBuffer.append(input);
-//					stringBuffer.append("\r\n");
-//					System.out.println("infinte loop");
-//				}
-				/* Parse the request */
-				
-				System.out.println("Read from client "
-						+ clientSock.getInetAddress() + ":"
-						+ clientSock.getPort() + " " + buffer);
-				/*
-				 * Echo the data back and flush the stream to make sure that the
-				 * data is sent immediately
-				 */
-				outStream.writeBytes(buffer);
-				outStream.flush();
-				/* Interaction with this client complete, close() the socket */
-				clientSock.close();
-			} catch (IOException e) {
-				clientSock = null;
 				continue;
 			}
 		}
