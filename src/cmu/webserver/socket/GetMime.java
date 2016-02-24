@@ -7,6 +7,8 @@
  * 
  */
 
+package cmu.webserver.socket;
+
 import java.net.FileNameMap;
 import java.net.URLConnection;
 
