@@ -34,14 +34,14 @@ public class HTTPHandler implements Runnable {
 			inStream.close();
 			outStream.close();
 			clientSock.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private List<String> getRequestLines(BufferedReader inStream) {
+	private List<String> getRequestLines(BufferedReader inStream) throws IOException {
 		List<String> requestLines = new ArrayList<>();
-		// TODO parse the input
+		requestLines.add(inStream.readLine());
 		return requestLines;
 	}
 }

@@ -71,7 +71,7 @@ public class Client {
 				 * listen() in order for this to succeed. This call initiates
 				 * the SYN-SYN/ACK-ACK handshake
 				 */
-				sock = new Socket(args[0], port);
+				sock = new Socket(addr, port);
 				System.out.println("Just connected to " + sock.getRemoteSocketAddress());
 			} catch (IOException e) {
 				System.err.println("Unable to reach server");

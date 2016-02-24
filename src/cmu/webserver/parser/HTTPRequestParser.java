@@ -10,7 +10,6 @@ import cmu.webserver.exception.InvalidHttpRequestException;
 import cmu.webserver.exception.UnsupportedMethodException;
 import cmu.webserver.model.HTTPMethod;
 import cmu.webserver.model.HTTPRequestDetails;
-import cmu.webserver.model.HTTPVersion;
 
 /**
  * @author apurv
@@ -22,7 +21,7 @@ public class HTTPRequestParser {
 	
 	public static void main(String args[]) throws InvalidHttpRequestException, UnsupportedMethodException {
 		HTTPRequestParser details = new HTTPRequestParser();
-		List requestLines = new ArrayList<>();
+		List<String> requestLines = new ArrayList<>();
 		requestLines.add("GET /something/asd/index/ HTTP/1.0");
 		requestLines.add("HOST: yahoo.com");
 		requestLines.add("SOMETHING: somethingelse");
