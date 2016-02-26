@@ -64,7 +64,7 @@ public class Client {
 				/* Read until we receive a second \r\n" */
 				while((buffer=br.readLine()).length()!=0) {
 					stringBuffer.append(buffer);
-					stringBuffer.append("\\r\\n");
+					stringBuffer.append("\r\n");
 				}
 				/*
 				 * connect() to the server at addr:port. The server needs to be
@@ -87,7 +87,7 @@ public class Client {
 				outStream.flush();
 				/* Read the data echoed by the server */
 				buffer = inStream.readLine();
-				System.out.println("Received : " + buffer.toString()+ stringBuffer.toString());
+				System.out.println("Received : " + stringBuffer.toString());
 				/* Close the connection and wait for next input */
 				sock.close();
 			} catch (IOException e) {
