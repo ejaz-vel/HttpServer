@@ -16,6 +16,8 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import cmu.webserver.handler.HTTPHandler;
+
 public class Server {
 	private static ServerSocket srvSock;
 
@@ -68,6 +70,8 @@ public class Server {
 				System.out.println("Accpeted new connection from "
 						+ clientSock.getInetAddress() + ":"
 						+ clientSock.getPort());
+				Thread thread = new Thread(new HTTPHandler(clientSock));
+				thread.start();
 			} catch (IOException e) {
 				continue;
 			}
