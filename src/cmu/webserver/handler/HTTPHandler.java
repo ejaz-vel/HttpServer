@@ -43,7 +43,10 @@ public class HTTPHandler implements Runnable {
 
 	private List<String> getRequestLines(BufferedReader inStream) throws IOException {
 		List<String> requestLines = new ArrayList<>();
-		requestLines.add(inStream.readLine());
+		String input;
+		while(inStream.ready() && (input=inStream.readLine())!=null) {
+			requestLines.add(input);
+		}
 		return requestLines;
 	}
 }
