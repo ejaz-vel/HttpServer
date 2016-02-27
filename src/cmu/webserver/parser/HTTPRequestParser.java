@@ -48,13 +48,9 @@ public class HTTPRequestParser {
 		if(statusLineArray.length!=3) {
 			throw new InvalidHttpRequestException("Number of arguments in the status line is incorrect.");
 		}
-		// To be handled in the server
-		/* Check if the method is GET or HEAD */
-		if(!statusLineArray[0].equals(HTTPMethod.GET.toString()) && 
-								!statusLineArray[0].equals(HTTPMethod.HEAD.toString())) {
-			throw new UnsupportedMethodException("This server only supports GET and HEAD methods");
-		}
-		requestDetails.setMethod(HTTPMethod.valueOf(statusLineArray[0]));
+		
+		System.out.println(statusLineArray[0]);
+		requestDetails.setMethod(HTTPMethod.fromString(statusLineArray[0]));
 		String relativePath = statusLineArray[1];
 		int lastIndex = 0;
 		/* If there are more than one "/" that means that we have an additional relative path */
@@ -63,10 +59,6 @@ public class HTTPRequestParser {
 			requestDetails.setWebPage(relativePath.substring(lastIndex));
 		} else {
 			requestDetails.setWebPage(relativePath);
-		}
-		String httpVersion = statusLineArray[2];
-		if(!"HTTP/1.0".equals(httpVersion)) {
-			throw new InvalidHttpRequestException("Only HTTP/1.0 is supported.");
 		}
 		requestLines.remove(0);
 		

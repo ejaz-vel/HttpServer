@@ -23,10 +23,12 @@ public class HTTPHandler implements Runnable {
 	@Override
 	public void run() {
 		try {
+			System.out.println("Entered Thread");
 			BufferedReader inStream = new BufferedReader(new InputStreamReader(
 					clientSock.getInputStream()));
 			DataOutputStream outStream = new DataOutputStream(clientSock.getOutputStream());
 			List<String> requestLines = getRequestLines(inStream);
+			System.out.println(requestLines);
 			HTTPRequestDetails request = new HTTPRequestParser().parseRequest(requestLines);
 			HTTPResponse response = new ResponseHandler().handleRequest(request);
 			outStream.writeBytes(response.toString());
