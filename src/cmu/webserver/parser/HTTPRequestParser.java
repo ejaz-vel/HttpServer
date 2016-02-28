@@ -3,7 +3,6 @@
  */
 package cmu.webserver.parser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cmu.webserver.exception.InvalidHttpRequestException;
@@ -18,15 +17,6 @@ import cmu.webserver.model.HTTPRequestDetails;
  */
 public class HTTPRequestParser {
 	HTTPRequestDetails requestDetails = new HTTPRequestDetails();
-	
-	public static void main(String args[]) throws InvalidHttpRequestException, UnsupportedMethodException {
-		HTTPRequestParser details = new HTTPRequestParser();
-		List<String> requestLines = new ArrayList<>();
-		requestLines.add("GET /something/asd/index/ HTTP/1.0");
-		requestLines.add("HOST: yahoo.com");
-		requestLines.add("SOMETHING: somethingelse");
-		System.out.println(details.parseRequest(requestLines));
-	}
 	
 	/**
 	 * Method responsible for parsing the HTTP request made to the server. Also responsible for 
@@ -49,8 +39,7 @@ public class HTTPRequestParser {
 			throw new InvalidHttpRequestException("Number of arguments in the status line is incorrect.");
 		}
 		
-		System.out.println(statusLineArray[0]);
-		requestDetails.setMethod(HTTPMethod.fromString(statusLineArray[0]));
+		requestDetails.setMethod(HTTPMethod.fromString(statusLineArray[0].trim()));
 		String relativePath = statusLineArray[1];
 		int lastIndex = 0;
 		/* If there are more than one "/" that means that we have an additional relative path */

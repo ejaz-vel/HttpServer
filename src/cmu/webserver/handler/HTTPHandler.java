@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +27,15 @@ public class HTTPHandler implements Runnable {
 			System.out.println("Entered Thread");
 			BufferedReader inStream = new BufferedReader(new InputStreamReader(
 					clientSock.getInputStream()));
-			DataOutputStream outStream = new DataOutputStream(clientSock.getOutputStream());
+			OutputStream outStream = clientSock.getOutputStream();
 			List<String> requestLines = getRequestLines(inStream);
 			System.out.println(requestLines);
 			HTTPRequestDetails request = new HTTPRequestParser().parseRequest(requestLines);
 			HTTPResponse response = new ResponseHandler().handleRequest(request);
-			outStream.writeBytes(response.toString());
-			outStream.flush();
+			outStream.write(response.toString().getBytes());
 			inStream.close();
 			outStream.close();
-			clientSock.close();
+			//clientSock.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -45,8 +45,19 @@ public class HTTPHandler implements Runnable {
 		List<String> requestLines = new ArrayList<>();
 		String input;
 		while(inStream.ready() && (input=inStream.readLine())!=null) {
-			requestLines.add(input);
+			if (containsAlphaNumCharacters(input)) {
+				requestLines.add(input.replaceAll("\\p{C}", ""));
+			}
 		}
 		return requestLines;
+	}
+
+	private boolean containsAlphaNumCharacters(String input) {
+		for (char ch: input.toCharArray()) {
+			if (Character.isLetterOrDigit(ch)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
