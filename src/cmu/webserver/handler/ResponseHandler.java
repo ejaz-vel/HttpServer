@@ -44,17 +44,17 @@ public class ResponseHandler {
 		try {
 			response.addField("Content-Length", String.valueOf(getFileSize(fileName)));
 			response.addField("Content-Type", GetMime.getMimeType(fileName));
+			BufferedReader br = new BufferedReader(new FileReader(fileName));
 			if (request.getMethod().equals(HTTPMethod.GET)) {
 				StringBuilder sb = new StringBuilder();
-				BufferedReader br = new BufferedReader(new FileReader(fileName));
 				String line = br.readLine();
 				while (line != null) {
 					sb.append(line + "\n");
 					line = br.readLine();
 				}
-				br.close();
 				response.setBody(sb.toString());
 			}
+			br.close();
 			response.setResponseCode(HTTPResponseCode.HTTP_200);
 			response.addField("Connection", "close");
 		} catch (IOException e) {
