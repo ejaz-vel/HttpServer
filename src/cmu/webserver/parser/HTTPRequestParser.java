@@ -34,6 +34,7 @@ public class HTTPRequestParser {
 			throw new InvalidHttpRequestException("Status line is absent.");
 		}
 		String statusLine = requestLines.get(0);
+		System.out.println(statusLine);
 		String[] statusLineArray = statusLine.split(" ");
 		/* The status line should contain all three parameters */
 		if(statusLineArray.length!=3) {

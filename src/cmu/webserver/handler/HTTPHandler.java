@@ -13,33 +13,46 @@ import java.util.List;
 
 import cmu.webserver.model.HTTPRequestDetails;
 import cmu.webserver.model.HTTPResponse;
+import cmu.webserver.model.HTTPResponseCode;
+import cmu.webserver.model.HTTPVersion;
 import cmu.webserver.parser.HTTPRequestParser;
 
 public class HTTPHandler implements Runnable {
 
 	private Socket clientSock;
-	
+
 	public HTTPHandler(Socket clientSock) {
 		this.clientSock = clientSock;
 	}
-	
+
 	@Override
 	public void run() {
+		BufferedReader inStream = null;
+		PrintWriter outStream = null;
+		HTTPResponse response;
 		try {
 			System.out.println("Entered Thread");
-			BufferedReader inStream = new BufferedReader(new InputStreamReader(
+			inStream = new BufferedReader(new InputStreamReader(
 					clientSock.getInputStream()));
-			PrintWriter outStream = new PrintWriter(new OutputStreamWriter(clientSock.getOutputStream()));
+			outStream = new PrintWriter(new OutputStreamWriter(clientSock.getOutputStream()));
 			List<String> requestLines = getRequestLines(inStream);
-			System.out.println(requestLines);
 			HTTPRequestDetails request = new HTTPRequestParser().parseRequest(requestLines);
-			HTTPResponse response = new ResponseHandler().handleRequest(request);
+			response = new ResponseHandler().handleRequest(request);
+		} catch (Exception e) {
+			response = new HTTPResponse();
+			response.setResponseCode(HTTPResponseCode.HTTP_500);
+			response.setVersion(HTTPVersion.HTTP1_0);
+			response.setBody(e.getMessage());
+		}
+		
+		try {
 			outStream.println(response.toString());
 			outStream.flush();
 			inStream.close();
 			outStream.close();
 			clientSock.close();
-		} catch (Exception e) {
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

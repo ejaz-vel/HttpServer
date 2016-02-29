@@ -37,7 +37,7 @@ public class ResponseHandler {
 
 		if (!request.getMethod().equals(HTTPMethod.GET)
 				&& !request.getMethod().equals(HTTPMethod.HEAD)) {
-			response.setResponseCode(HTTPResponseCode.HTTP_400);
+			response.setResponseCode(HTTPResponseCode.HTTP_501);
 			return response;
 		}
 
@@ -62,7 +62,7 @@ public class ResponseHandler {
 			e.printStackTrace();
 		} catch (Throwable e) {
 			response.setResponseCode(HTTPResponseCode.HTTP_500);
-			e.printStackTrace();
+			response.setBody(e.getMessage());
 		}
 		return response;
 	}

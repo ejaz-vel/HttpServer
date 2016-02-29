@@ -4,7 +4,9 @@ public enum HTTPResponseCode {
 	HTTP_200(200, "OK"),
 	HTTP_400(400, "Bad Request"),
 	HTTP_404(404, "Resource Not Found"),
-	HTTP_500(500, "Internal Server Error");
+	HTTP_500(500, "Internal Server Error"),
+	HTTP_501(501, "NOT_IMPLEMENTED"),
+	HTTP_503(503, "SERVICE_UNAVAILABLE");
 	
 	private Integer httpCode;
 
