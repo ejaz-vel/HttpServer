@@ -49,7 +49,7 @@ public class ResponseHandler {
 				BufferedReader br = new BufferedReader(new FileReader(fileName));
 				String line = br.readLine();
 				while (line != null) {
-					sb.append(line);
+					sb.append(line + "\n");
 					line = br.readLine();
 				}
 				br.close();

@@ -87,7 +87,11 @@ public class Client {
 				outStream.flush();
 				/* Read the data echoed by the server */
 				buffer = inStream.readLine();
-				System.out.println("Received : " + stringBuffer.toString());
+				//System.out.println("Received : " + buffer.toString());
+				while(buffer != null) {
+					System.out.println(buffer);
+					buffer = inStream.readLine();
+				}
 				/* Close the connection and wait for next input */
 				sock.close();
 			} catch (IOException e) {

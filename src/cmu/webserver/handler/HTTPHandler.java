@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +29,16 @@ public class HTTPHandler implements Runnable {
 			System.out.println("Entered Thread");
 			BufferedReader inStream = new BufferedReader(new InputStreamReader(
 					clientSock.getInputStream()));
-			OutputStream outStream = clientSock.getOutputStream();
+			PrintWriter outStream = new PrintWriter(new OutputStreamWriter(clientSock.getOutputStream()));
 			List<String> requestLines = getRequestLines(inStream);
 			System.out.println(requestLines);
 			HTTPRequestDetails request = new HTTPRequestParser().parseRequest(requestLines);
 			HTTPResponse response = new ResponseHandler().handleRequest(request);
-			outStream.write(response.toString().getBytes());
+			outStream.println(response.toString());
+			outStream.flush();
 			inStream.close();
 			outStream.close();
-			//clientSock.close();
+			clientSock.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
