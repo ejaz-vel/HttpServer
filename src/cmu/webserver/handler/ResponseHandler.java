@@ -60,6 +60,9 @@ public class ResponseHandler {
 		} catch (IOException e) {
 			response.setResponseCode(HTTPResponseCode.HTTP_404);
 			e.printStackTrace();
+		} catch (Throwable e) {
+			response.setResponseCode(HTTPResponseCode.HTTP_500);
+			e.printStackTrace();
 		}
 		return response;
 	}

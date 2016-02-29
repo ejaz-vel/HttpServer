@@ -13,11 +13,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import cmu.webserver.constants.ServerConstants;
 import cmu.webserver.handler.HTTPHandler;
 
 public class Simple {
 	private static ServerSocket srvSock;
-
+	
 	public static void main(String args[]) {
 		int port = 8080;
 		/* Parse parameter and do args checking */
@@ -36,6 +37,13 @@ public class Simple {
 		if (port > 65535 || port < 1024) {
 			System.err.println("Port number must be in between 1024 and 65535");
 			System.exit(1);
+		}
+		
+		if(args.length==1) {
+			ServerConstants.PATH =  System.getProperty("user.dir");
+			ServerConstants.PATH += "/www";
+		} else {
+			ServerConstants.PATH = args[1];
 		}
 
 		try {

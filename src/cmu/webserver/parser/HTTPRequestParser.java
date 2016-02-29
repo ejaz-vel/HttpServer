@@ -5,6 +5,7 @@ package cmu.webserver.parser;
 
 import java.util.List;
 
+import cmu.webserver.constants.ServerConstants;
 import cmu.webserver.exception.InvalidHttpRequestException;
 import cmu.webserver.exception.UnsupportedMethodException;
 import cmu.webserver.model.HTTPMethod;
@@ -40,7 +41,7 @@ public class HTTPRequestParser {
 		}
 		
 		requestDetails.setMethod(HTTPMethod.fromString(statusLineArray[0].trim()));
-		String relativePath = statusLineArray[1];
+		String relativePath = ServerConstants.PATH+statusLineArray[1];
 		int lastIndex = 0;
 		/* If there are more than one "/" that means that we have an additional relative path */
 		if((lastIndex=relativePath.lastIndexOf("/"))>0) {
@@ -49,6 +50,12 @@ public class HTTPRequestParser {
 		} else {
 			requestDetails.setWebPage(relativePath);
 		}
+		
+		/* Check if a webpage name is passed */
+		if(relativePath.lastIndexOf("/")==relativePath.length()-1) {
+			requestDetails.setWebPage(relativePath+ServerConstants.INDEX_HTML);
+		}
+		
 		requestLines.remove(0);
 		
 		/* Parse the HTTP headers */
