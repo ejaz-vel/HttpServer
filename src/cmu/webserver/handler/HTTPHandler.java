@@ -11,6 +11,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import cmu.webserver.exception.InvalidHttpRequestException;
+import cmu.webserver.exception.UnsupportedMethodException;
 import cmu.webserver.model.HTTPErrorResponse;
 import cmu.webserver.model.HTTPRequestDetails;
 import cmu.webserver.model.HTTPResponse;
@@ -43,6 +45,18 @@ public class HTTPHandler implements Runnable {
 			response = new ResponseHandler().handleRequest(request);
 			outStream.println(response.toString());
 			outStream.flush();
+		} catch(InvalidHttpRequestException e) {
+			e.printStackTrace();
+			String message = "Bad request - The request was Malformed.";
+			HTTPErrorResponse errorResponse = new HTTPErrorResponse(HTTPResponseCode.HTTP_400,message);
+			outStream.println(errorResponse.toString());
+			outStream.flush();
+		} catch(UnsupportedMethodException e) {
+			e.printStackTrace();
+			String message = e.getMessage();
+			HTTPErrorResponse errorResponse = new HTTPErrorResponse(HTTPResponseCode.HTTP_501,message);
+			outStream.println(errorResponse.toString());
+			outStream.flush();
 		} catch (Throwable e) {
 			e.printStackTrace();
 			String message = "The server encountered an unexpected error.";
@@ -61,7 +75,7 @@ public class HTTPHandler implements Runnable {
 				e.printStackTrace();
 			}
 		    /* Increase number of threads */
-		    SynchronizedCounter.getInstance().increment();
+		    //SynchronizedCounter.getInstance().increment();
 		}
 	}
 

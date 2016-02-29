@@ -29,7 +29,7 @@ public class HTTPRequestParser {
 	 * @throws UnsupportedMethodException
 	 */
 	public HTTPRequestDetails parseRequest(List<String> requestLines) throws 
-									InvalidHttpRequestException, UnsupportedMethodException {
+									InvalidHttpRequestException{
 		if(requestLines==null || requestLines.size()==0) {
 			throw new InvalidHttpRequestException("Status line is absent.");
 		}

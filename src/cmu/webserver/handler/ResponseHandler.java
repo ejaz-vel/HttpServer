@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import cmu.webserver.constants.ServerConstants;
+import cmu.webserver.exception.UnsupportedMethodException;
 import cmu.webserver.model.HTTPErrorResponse;
 import cmu.webserver.model.HTTPMethod;
 import cmu.webserver.model.HTTPRequestDetails;
@@ -24,7 +25,7 @@ public class ResponseHandler {
 		return 0;
 	}
 	
-	public HTTPResponse handleRequest(HTTPRequestDetails request) throws IOException {
+	public HTTPResponse handleRequest(HTTPRequestDetails request) throws IOException, UnsupportedMethodException {
 		HTTPResponse response = new HTTPResponse();
 		response.setVersion(HTTPVersion.HTTP1_0);
 		response.addField("Server", ServerConstants.SERVER_NAME);
@@ -37,8 +38,7 @@ public class ResponseHandler {
 
 		if (!request.getMethod().equals(HTTPMethod.GET)
 				&& !request.getMethod().equals(HTTPMethod.HEAD)) {
-			response.setResponseCode(HTTPResponseCode.HTTP_501);
-			return response;
+			throw new UnsupportedMethodException("This method is unsupported by the server.");
 		}
 
 		try {
