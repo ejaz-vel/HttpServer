@@ -2,7 +2,10 @@ package cmu.webserver.model;
 
 public enum HTTPMethod {
 	GET("GET"),
-	HEAD("HEAD");
+	HEAD("HEAD"),
+	POST("POST"),
+	PUT("PUT"),
+	DELETE("DELETE");
 
 	private String methodName;
 

@@ -9,7 +9,7 @@ package cmu.webserver.model;
  */
 public class SynchronizedCounter {
 
-	private int noOfAllowedThreads = 0;
+	private int noOfAllowedThreads = 1000;
 	private static SynchronizedCounter synchronizedCounter = null;
 	
 	private SynchronizedCounter() {

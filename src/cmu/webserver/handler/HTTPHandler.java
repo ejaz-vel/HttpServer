@@ -14,6 +14,8 @@ import java.util.List;
 import cmu.webserver.model.HTTPRequestDetails;
 import cmu.webserver.model.HTTPResponse;
 import cmu.webserver.model.SynchronizedCounter;
+import cmu.webserver.model.HTTPResponseCode;
+import cmu.webserver.model.HTTPVersion;
 import cmu.webserver.parser.HTTPRequestParser;
 
 public class HTTPHandler implements Runnable {
@@ -25,22 +27,27 @@ public class HTTPHandler implements Runnable {
 	public HTTPHandler(Socket clientSock) {
 		this.clientSock = clientSock;
 	}
-	
+
 	@Override
 	public void run() {
+		BufferedReader inStream = null;
+		PrintWriter outStream = null;
+		HTTPResponse response;
 		try {
 			System.out.println("Entered Thread");
 			inStream = new BufferedReader(new InputStreamReader(
 					clientSock.getInputStream()));
 			outStream = new PrintWriter(new OutputStreamWriter(clientSock.getOutputStream()));
 			List<String> requestLines = getRequestLines(inStream);
-			System.out.println(requestLines);
 			HTTPRequestDetails request = new HTTPRequestParser().parseRequest(requestLines);
-			HTTPResponse response = new ResponseHandler().handleRequest(request);
+			response = new ResponseHandler().handleRequest(request);
 			outStream.println(response.toString());
 			outStream.flush();
 		} catch (Exception e) {
-			e.printStackTrace();
+			response = new HTTPResponse();
+			response.setResponseCode(HTTPResponseCode.HTTP_500);
+			response.setVersion(HTTPVersion.HTTP1_0);
+			response.setBody(e.getMessage());
 		} finally {
 		    try {
 		    	if(inStream!=null)

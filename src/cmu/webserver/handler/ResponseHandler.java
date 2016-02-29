@@ -36,24 +36,24 @@ public class ResponseHandler {
 
 		if (!request.getMethod().equals(HTTPMethod.GET)
 				&& !request.getMethod().equals(HTTPMethod.HEAD)) {
-			response.setResponseCode(HTTPResponseCode.HTTP_400);
+			response.setResponseCode(HTTPResponseCode.HTTP_501);
 			return response;
 		}
 
 		try {
 			response.addField("Content-Length", String.valueOf(getFileSize(fileName)));
 			response.addField("Content-Type", GetMime.getMimeType(fileName));
+			BufferedReader br = new BufferedReader(new FileReader(fileName));
 			if (request.getMethod().equals(HTTPMethod.GET)) {
 				StringBuilder sb = new StringBuilder();
-				BufferedReader br = new BufferedReader(new FileReader(fileName));
 				String line = br.readLine();
 				while (line != null) {
 					sb.append(line + "\n");
 					line = br.readLine();
 				}
-				br.close();
 				response.setBody(sb.toString());
 			}
+			br.close();
 			response.setResponseCode(HTTPResponseCode.HTTP_200);
 			response.addField("Connection", "close");
 		} catch (IOException e) {
@@ -61,7 +61,7 @@ public class ResponseHandler {
 			e.printStackTrace();
 		} catch (Throwable e) {
 			response.setResponseCode(HTTPResponseCode.HTTP_500);
-			e.printStackTrace();
+			response.setBody(e.getMessage());
 		}
 		return response;
 	}
