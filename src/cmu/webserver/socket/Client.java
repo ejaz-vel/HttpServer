@@ -92,10 +92,17 @@ public class Client {
 					System.out.println(buffer);
 					buffer = inStream.readLine();
 				}
-				/* Close the connection and wait for next input */
-				sock.close();
 			} catch (IOException e) {
 				continue;
+			} finally {
+				/* Close the connection and wait for next input */
+				try {
+					if(sock!=null)
+						sock.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}

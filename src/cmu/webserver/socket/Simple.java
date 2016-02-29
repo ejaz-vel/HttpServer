@@ -10,11 +10,17 @@
 package cmu.webserver.socket;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import cmu.webserver.constants.ServerConstants;
 import cmu.webserver.handler.HTTPHandler;
+import cmu.webserver.model.HTTPErrorResponse;
+import cmu.webserver.model.HTTPResponse;
+import cmu.webserver.model.HTTPResponseCode;
+import cmu.webserver.model.SynchronizedCounter;
 
 public class Simple {
 	private static ServerSocket srvSock;
@@ -39,6 +45,9 @@ public class Simple {
 			System.exit(1);
 		}
 		
+		/* Check if the user has passed the path in the arguments, else append path
+		 * by default.
+		 */
 		if(args.length==1) {
 			ServerConstants.PATH =  System.getProperty("user.dir");
 			ServerConstants.PATH += "/www";
@@ -68,9 +77,23 @@ public class Simple {
 				 */
 				System.out.println("\nWaiting for client request");
 				clientSock = srvSock.accept();
-				System.out.println("Accpeted new connection from "
+				
+				System.out.println("Accepted new connection from "
 						+ clientSock.getInetAddress() + ":"
 						+ clientSock.getPort());
+				
+				/* Handle server overload problems */
+				if(!SynchronizedCounter.getInstance().areThreadsAvailable()) {
+					PrintWriter outStream = new PrintWriter(new OutputStreamWriter(clientSock.getOutputStream()));
+					HTTPResponse response = new HTTPErrorResponse(HTTPResponseCode.HTTP_503, "Server is temporarily "
+							+ "not able to serve anymore requests");
+					outStream.println(response.toString());
+					outStream.flush();
+					outStream.close();
+					continue;
+				}
+				
+				SynchronizedCounter.getInstance().decrement();
 				Thread thread = new Thread(new HTTPHandler(clientSock));
 				thread.start();
 			} catch (IOException e) {

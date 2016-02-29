@@ -13,11 +13,14 @@ import java.util.List;
 
 import cmu.webserver.model.HTTPRequestDetails;
 import cmu.webserver.model.HTTPResponse;
+import cmu.webserver.model.SynchronizedCounter;
 import cmu.webserver.parser.HTTPRequestParser;
 
 public class HTTPHandler implements Runnable {
 
 	private Socket clientSock;
+	PrintWriter outStream = null;
+	BufferedReader inStream = null;
 	
 	public HTTPHandler(Socket clientSock) {
 		this.clientSock = clientSock;
@@ -27,20 +30,30 @@ public class HTTPHandler implements Runnable {
 	public void run() {
 		try {
 			System.out.println("Entered Thread");
-			BufferedReader inStream = new BufferedReader(new InputStreamReader(
+			inStream = new BufferedReader(new InputStreamReader(
 					clientSock.getInputStream()));
-			PrintWriter outStream = new PrintWriter(new OutputStreamWriter(clientSock.getOutputStream()));
+			outStream = new PrintWriter(new OutputStreamWriter(clientSock.getOutputStream()));
 			List<String> requestLines = getRequestLines(inStream);
 			System.out.println(requestLines);
 			HTTPRequestDetails request = new HTTPRequestParser().parseRequest(requestLines);
 			HTTPResponse response = new ResponseHandler().handleRequest(request);
 			outStream.println(response.toString());
 			outStream.flush();
-			inStream.close();
-			outStream.close();
-			clientSock.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+		    try {
+		    	if(inStream!=null)
+		    		inStream.close();
+		    	if(outStream!=null)
+		    		outStream.close();
+		    	if(clientSock!=null)
+		    		clientSock.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		    /* Increase number of threads */
+		    SynchronizedCounter.getInstance().increment();
 		}
 	}
 

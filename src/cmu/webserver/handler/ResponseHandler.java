@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import cmu.webserver.constants.ServerConstants;
 import cmu.webserver.model.HTTPMethod;
 import cmu.webserver.model.HTTPRequestDetails;
 import cmu.webserver.model.HTTPResponse;
@@ -13,8 +14,6 @@ import cmu.webserver.model.HTTPVersion;
 import cmu.webserver.socket.GetMime;
 
 public class ResponseHandler {
-
-	private static final String SERVER_NAME = "Simple/1.0";
 
 	public long getFileSize(String fileName) {
 		File file = new File(fileName);
@@ -27,7 +26,7 @@ public class ResponseHandler {
 	public HTTPResponse handleRequest(HTTPRequestDetails request) throws IOException {
 		HTTPResponse response = new HTTPResponse();
 		response.setVersion(HTTPVersion.HTTP1_0);
-		response.addField("Server", SERVER_NAME);
+		response.addField("Server", ServerConstants.SERVER_NAME);
 		String fileName;
 		if (request.getRelativePath() != null) {
 			fileName = request.getRelativePath() + request.getWebPage();

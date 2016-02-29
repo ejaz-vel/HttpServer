@@ -9,6 +9,18 @@ public class HTTPResponse {
 	private Map<String, String> responseFields = new HashMap<>();
 	private String body;
 	
+	
+	public HTTPResponse() {
+		super();
+	}
+
+	public HTTPResponse(HTTPVersion version, HTTPResponseCode responseCode, String body) {
+		super();
+		this.version = version;
+		this.responseCode = responseCode;
+		this.body = body;
+	}
+
 	public HTTPVersion getVersion() {
 		return version;
 	}
