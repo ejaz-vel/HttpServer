@@ -54,7 +54,7 @@ public class HTTPRequestParser {
 		
 		/* Check if a webpage name is passed */
 		if(relativePath.lastIndexOf("/")==relativePath.length()-1) {
-			requestDetails.setWebPage(relativePath+ServerConstants.INDEX_HTML);
+			requestDetails.setWebPage(ServerConstants.INDEX_HTML);
 		}
 		
 		requestLines.remove(0);

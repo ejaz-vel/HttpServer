@@ -22,6 +22,7 @@ public class HTTPErrorResponse extends HTTPResponse {
 		this.addField("Server", ServerConstants.SERVER_NAME);
 		this.addField("Content-Type","text/html");
 		this.addField("Content-Length", this.getBody().length()+"");
+		this.addField("Connection", "close");
 	}
 	
 	@Override

@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import cmu.webserver.constants.ServerConstants;
+import cmu.webserver.model.HTTPErrorResponse;
 import cmu.webserver.model.HTTPMethod;
 import cmu.webserver.model.HTTPRequestDetails;
 import cmu.webserver.model.HTTPResponse;
@@ -57,11 +58,10 @@ public class ResponseHandler {
 			response.setResponseCode(HTTPResponseCode.HTTP_200);
 			response.addField("Connection", "close");
 		} catch (IOException e) {
-			response.setResponseCode(HTTPResponseCode.HTTP_404);
+			response = new HTTPErrorResponse(HTTPResponseCode.HTTP_404, "The requested page is not found.");
 			e.printStackTrace();
-		} catch (Throwable e) {
-			response.setResponseCode(HTTPResponseCode.HTTP_500);
-			response.setBody(e.getMessage());
+		} catch (Exception e) {
+			throw e;
 		}
 		return response;
 	}
