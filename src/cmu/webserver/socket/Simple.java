@@ -81,7 +81,6 @@ public class Simple {
 				System.out.println("Accepted new connection from "
 						+ clientSock.getInetAddress() + ":"
 						+ clientSock.getPort());
-				
 				/* Handle server overload problems */
 				if(!SynchronizedCounter.getInstance().areThreadsAvailable()) {
 					PrintWriter outStream = new PrintWriter(new OutputStreamWriter(clientSock.getOutputStream()));
